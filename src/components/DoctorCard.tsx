@@ -15,6 +15,7 @@ interface DoctorCardProps {
   type: ('online' | 'in-person')[];
   image: string;
   phone?: string;
+  mapLink?: string;
 }
 
 export function DoctorCard({ doctor }: { doctor: DoctorCardProps }) {
@@ -30,6 +31,14 @@ export function DoctorCard({ doctor }: { doctor: DoctorCardProps }) {
     }
   };
 
+  const handleMapClick = () => {
+    if (doctor.mapLink) {
+      window.open(doctor.mapLink, '_blank');
+    } else {
+      window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(doctor.name + ' ' + doctor.location)}`, '_blank');
+    }
+  };
+
   return (
     <>
     <motion.div
@@ -38,12 +47,16 @@ export function DoctorCard({ doctor }: { doctor: DoctorCardProps }) {
     >
       <div className="p-5 flex gap-5">
         <div className="relative">
-          <div className="w-24 h-24 rounded-2xl overflow-hidden">
-            <img 
-              src={doctor.image} 
-              alt={doctor.name} 
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
-            />
+          <div className="w-24 h-24 rounded-2xl overflow-hidden bg-secondary-bg flex items-center justify-center">
+            {doctor.image ? (
+              <img 
+                src={doctor.image} 
+                alt={doctor.name} 
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+              />
+            ) : (
+              <Stethoscope className="w-10 h-10 text-primary/40 group-hover:scale-110 transition-transform duration-500" />
+            )}
           </div>
           <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-white dark:bg-card px-2 py-1 rounded-lg text-xs font-bold text-text shadow-sm border border-border flex items-center gap-1">
             <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
@@ -94,7 +107,7 @@ export function DoctorCard({ doctor }: { doctor: DoctorCardProps }) {
         <Button 
           variant="primary" 
           size="sm"
-          onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(doctor.name + ' ' + doctor.location)}`, '_blank')}
+          onClick={handleMapClick}
         >
           See on Map
         </Button>
