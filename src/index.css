@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", sans-serif;
+  
+  --color-background: var(--bg-color);
+  --color-secondary-bg: var(--bg-secondary);
+  --color-card: var(--card-color);
+  --color-primary: var(--primary-color);
+  --color-primary-hover: var(--primary-hover-color);
+  --color-secondary-accent: var(--secondary-accent-color);
+  --color-text: var(--text-color);
+  --color-secondary-text: var(--secondary-text-color);
+  --color-border: var(--border-color);
+}
+
+@layer base {
+  :root {
+    /* Exact Colors from Screenshot */
+    --bg-color: #F6F7F2;
+    --bg-secondary: #EBECE6;
+    --card-color: #FFFFFF;
+    --primary-color: #1a4d2e;
+    --primary-hover-color: #12351f;
+    --secondary-accent-color: #4f6f52;
+    --text-color: #181818;
+    --secondary-text-color: #5C625E;
+    --border-color: #D6D8D2;
+  }
+
+  .dark {
+    /* Force Light Theme Colors across the app */
+    --bg-color: #F6F7F2;
+    --bg-secondary: #EBECE6;
+    --card-color: #FFFFFF;
+    --primary-color: #1a4d2e;
+    --primary-hover-color: #12351f;
+    --secondary-accent-color: #4f6f52;
+    --text-color: #181818;
+    --secondary-text-color: #5C625E;
+    --border-color: #D6D8D2;
+  }
+
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background-color: #FFFFFF;
+    border-width: 1px;
+    border-color: var(--border-color);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+    border-radius: 0.75rem;
+  }
+}
