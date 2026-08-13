@@ -1,5 +1,10 @@
-from fastapi import FastAPI
+print("Importing FastAPI...")
+from fastapi import FastAPI, Depends, HTTPException, Query
+print("Importing CORS...")
 from fastapi.middleware.cors import CORSMiddleware
+print("Importing pipeline...")
+from backend.hybrid.pipeline import SearchPipeline
+print("Pipeline imported!")
 from backend.api.routers import product_search, knowledge_search
 import os
 
@@ -7,9 +12,9 @@ app = FastAPI(title="AyurWell Website API", description="AI Product Recommendati
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:3000").split(","),
+    allow_origins=["http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:5173"],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Search, ChevronDown, Loader2 } from 'lucide-react';
+import { ArrowRight, Search, Bookmark, ChevronDown, Loader2 } from 'lucide-react';
+import { Button } from '../components/Button';
 
 // The articles from the old Knowledge Hub
 const ARTICLES = [
@@ -78,14 +79,28 @@ const ARTICLES = [
   }
 ];
 
-const CATEGORIES = ["All Topics", "Acne", "Stress", "Digestion", "Sleep", "Hair Fall", "Web Search"];
+const CATEGORIES = ["All Topics", "Acne", "Stress", "Digestion", "Sleep", "Hair Fall"];
 
 export function KnowledgeHub() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Topics");
+  const [bookmarkedTitles, setBookmarkedTitles] = useState<string[]>([]);
+  const [showBookmarks, setShowBookmarks] = useState(false);
+
   // Dynamic search state
   const [dynamicArticles, setDynamicArticles] = useState<typeof ARTICLES>([]);
   const [isSearching, setIsSearching] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("bookmarks");
+    if (saved) {
+      try {
+        setBookmarkedTitles(JSON.parse(saved));
+      } catch (e) {
+        console.error("Failed to parse bookmarks", e);
+      }
+    }
+  }, []);
 
   // Debounced Web Search Effect
   useEffect(() => {
@@ -116,12 +131,21 @@ export function KnowledgeHub() {
     return () => clearTimeout(timeoutId);
   }, [searchQuery]);
 
+  const toggleBookmark = (title: string) => {
+    const updated = bookmarkedTitles.includes(title)
+      ? bookmarkedTitles.filter(t => t !== title)
+      : [...bookmarkedTitles, title];
+
+    setBookmarkedTitles(updated);
+    localStorage.setItem("bookmarks", JSON.stringify(updated));
+  };
+
   const combinedArticles = [...ARTICLES, ...dynamicArticles];
 
   const filteredArticles = combinedArticles.filter(article => {
     // Only apply text filtering to static articles since dynamic ones are already filtered by the API
     const isDynamic = dynamicArticles.some(d => d.title === article.title);
-    
+
     const matchesSearch = isDynamic ||
       article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       article.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -132,6 +156,8 @@ export function KnowledgeHub() {
 
     return matchesSearch && matchesCategory;
   });
+
+  const bookmarkedArticlesList = combinedArticles.filter(a => bookmarkedTitles.includes(a.title));
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -146,6 +172,52 @@ export function KnowledgeHub() {
               >
                 <div className="flex flex-wrap justify-between items-start gap-4 mb-6">
                   <span className="text-primary font-bold tracking-wider uppercase text-sm block">Official Resources</span>
+
+                  {/* Bookmarks Dropdown */}
+                  <div className="relative z-50">
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowBookmarks(!showBookmarks)}
+                      className="flex items-center gap-2 rounded-full border-primary/20 bg-white/50 backdrop-blur-md dark:bg-card/50"
+                    >
+                      <Bookmark className={`w-4 h-4 ${bookmarkedTitles.length > 0 ? 'fill-primary text-primary' : 'text-text'}`} />
+                      Bookmarks ({bookmarkedTitles.length})
+                      <ChevronDown className={`w-4 h-4 transition-transform ${showBookmarks ? 'rotate-180' : ''}`} />
+                    </Button>
+
+                    <AnimatePresence>
+                      {showBookmarks && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
+                          className="absolute right-0 mt-2 w-72 sm:w-80 bg-white dark:bg-card border border-border rounded-xl shadow-xl overflow-hidden"
+                        >
+                          <div className="p-3 border-b border-border bg-secondary-bg/50">
+                            <h4 className="font-bold text-sm text-text">Your Bookmarked Articles</h4>
+                          </div>
+                          <div className="max-h-64 overflow-y-auto p-2">
+                            {bookmarkedArticlesList.length === 0 ? (
+                              <p className="text-sm text-secondary-text p-4 text-center">No bookmarks yet.</p>
+                            ) : (
+                              bookmarkedArticlesList.map(article => (
+                                <a
+                                  key={article.title}
+                                  href={article.link}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="block p-3 rounded-lg hover:bg-secondary-bg/50 transition-colors text-sm group"
+                                >
+                                  <div className="font-semibold text-text group-hover:text-primary line-clamp-1">{article.title}</div>
+                                  <div className="text-xs text-secondary-text mt-1">{article.category}</div>
+                                </a>
+                              ))
+                            )}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 </div>
 
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-text tracking-tight mb-6 leading-tight">
@@ -239,8 +311,9 @@ export function KnowledgeHub() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredArticles.map((article, i) => {
+                const isBookmarked = bookmarkedTitles.includes(article.title);
                 // Unique key taking into account some dynamic sources might share titles
-                const uniqueKey = `${article.title}-${i}`; 
+                const uniqueKey = `${article.title}-${i}`;
                 return (
                   <motion.article
                     key={uniqueKey}
@@ -250,6 +323,18 @@ export function KnowledgeHub() {
                     transition={{ delay: (i % 6) * 0.1 }}
                     className="glass rounded-3xl overflow-hidden group flex flex-col h-full relative border border-border/50 hover:border-primary/30 transition-colors shadow-sm hover:shadow-xl"
                   >
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleBookmark(article.title);
+                      }}
+                      className="absolute top-4 right-4 z-20 bg-white/90 dark:bg-card/90 backdrop-blur-sm p-2.5 rounded-full shadow-lg hover:scale-110 transition-transform focus:outline-none"
+                      aria-label={isBookmarked ? "Remove bookmark" : "Add bookmark"}
+                    >
+                      <Bookmark className={`w-5 h-5 transition-colors ${isBookmarked ? 'fill-primary text-primary' : 'text-text'}`} />
+                    </button>
+
                     <a
                       href={article.link}
                       target="_blank"

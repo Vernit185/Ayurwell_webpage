@@ -1,13 +1,19 @@
 from typing import Dict, Any, List
+print("Importing sqlalchemy...")
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
+print("Importing QueryRewriter...")
 from backend.hybrid.query_rewriter import QueryRewriter
+print("Importing IntentClassifier...")
 from backend.hybrid.intent_classifier import IntentClassifier
+print("Importing medical_understanding...")
 from backend.hybrid.medical_understanding import search_disease
+print("Importing ProductRanker...")
 from backend.ranking.product_ranker import ProductRanker
 import requests
 import concurrent.futures
 from backend.db.product_models import Herb, HerbAlias, Product
+print("All pipeline imports done!")
 
 class SearchPipeline:
     def __init__(self, db_session: Session):
@@ -26,7 +32,7 @@ class SearchPipeline:
         
         def scrape_amazon():
             try:
-                res = requests.get(f"http://localhost:5173/api/scrape-amazon?q={query}", timeout=15)
+                res = requests.get(f"http://localhost:5174/api/scrape-amazon?q={query}", timeout=50)
                 if res.status_code == 200:
                     return res.json().get("products", [])
             except Exception as e:
@@ -35,7 +41,7 @@ class SearchPipeline:
 
         def scrape_flipkart():
             try:
-                res = requests.get(f"http://localhost:5173/api/scrape-flipkart?q={query}", timeout=15)
+                res = requests.get(f"http://localhost:5174/api/scrape-flipkart?q={query}", timeout=50)
                 if res.status_code == 200:
                     return res.json().get("products", [])
             except Exception as e:
