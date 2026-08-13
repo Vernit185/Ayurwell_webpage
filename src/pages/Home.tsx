@@ -4,7 +4,8 @@ import './Home.scss';
 
 export function Home() {
   return (
-    <div className="legacy-home">
+    <>
+      <div className="legacy-home">
       <header>
           <nav>
               <div className="logo">
@@ -13,14 +14,14 @@ export function Home() {
 
               <ul>
                   <li><a href="#hero">Home</a></li>
-                  <li><a href="/chatbot">Chatbot</a></li>
+                  <li><a href="https://ayurwell-lime.vercel.app/login">Chatbot</a></li>
                   <li><a href="/knowledge-hub">Knowledge Hub</a></li>
                   <li><a href="/products">Marketplace</a></li>
                   <li><a href="/doctors">Doctors</a></li>
                   <li><a href="#about-ayurwell">About Us</a></li>
               </ul>
 
-              <button>Login with Google</button>
+              <a href="https://ayurwell-lime.vercel.app/login"><button>Login</button></a>
           </nav>
       </header>
 
@@ -52,7 +53,7 @@ export function Home() {
                       Explore Ayurveda
                   </button></a>
 
-                  <a href="/chatbot"><button className="secondary-btn">
+                  <a href="https://ayurwell-lime.vercel.app/login"><button className="secondary-btn">
                       Chat with Assistant
                   </button></a>
               </div>
@@ -147,7 +148,7 @@ export function Home() {
                       Chat with our ai-powered assistant to explore remedies,
                       understand Ayurvedic concepts and navigate the platform with ease.
                   </p>
-                  <a href="/chatbot">
+                  <a href="https://ayurwell-lime.vercel.app/login">
                       <button className="assistant-btn">
                           Open Chatbot →
                       </button>
@@ -229,7 +230,8 @@ export function Home() {
           </p>
       </section>
 
+      </div>
       <Footer />
-    </div>
+    </>
   );
 }

@@ -12,7 +12,7 @@ function cn(...inputs: ClassValue[]) {
 
 const navLinks = [
   { name: 'Home', path: '/' },
-  { name: 'Chatbot', path: '/chatbot' },
+  { name: 'Chatbot', path: 'https://ayurwell-lime.vercel.app/login', external: true },
   { name: 'Knowledge Hub', path: '/knowledge-hub' },
   { name: 'Marketplace', path: '/products' },
   { name: 'Doctors', path: '/doctors' },
@@ -38,14 +38,28 @@ export function Navbar() {
           <div className="hidden md:flex items-center space-x-6">
             {navLinks.map((link) => {
               const isActive = location.pathname === link.path;
+              const linkClasses = cn(
+                "relative px-2 py-2 text-[15px] font-bold transition-colors hover:text-[#1a4d2e]",
+                isActive ? "text-[#1a4d2e]" : "text-[#1a1a1a]"
+              );
+              
+              if (link.external) {
+                return (
+                  <a
+                    key={link.name}
+                    href={link.path}
+                    className={linkClasses}
+                  >
+                    {link.name}
+                  </a>
+                );
+              }
+              
               return (
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={cn(
-                    "relative px-2 py-2 text-[15px] font-bold transition-colors hover:text-[#1a4d2e]",
-                    isActive ? "text-[#1a4d2e]" : "text-[#1a1a1a]"
-                  )}
+                  className={linkClasses}
                 >
                   {link.name}
                 </Link>
@@ -55,12 +69,14 @@ export function Navbar() {
 
           <div className="flex items-center">
             <div className="hidden md:block ml-4">
-              <Button 
-                variant="primary" 
-                className="rounded-full bg-[#181818] hover:bg-black text-white px-7 py-2.5 text-sm font-bold shadow-md transition-transform hover:scale-105"
-              >
-                Login with Google
-              </Button>
+              <a href="https://ayurwell-lime.vercel.app/login">
+                <Button 
+                  variant="primary" 
+                  className="rounded-full bg-[#181818] hover:bg-black text-white px-7 py-2.5 text-sm font-bold shadow-md transition-transform hover:scale-105"
+                >
+                  Login
+                </Button>
+              </a>
             </div>
           </div>
         </div>

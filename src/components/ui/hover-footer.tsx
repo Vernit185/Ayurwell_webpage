@@ -88,7 +88,7 @@ export const TextHoverEffect = ({
         textAnchor="middle"
         dominantBaseline="middle"
         strokeWidth="0.3"
-        className="fill-transparent stroke-neutral-200 font-[helvetica] text-5xl font-bold dark:stroke-neutral-800"
+        className="fill-transparent stroke-white/20 font-[helvetica] text-5xl font-bold dark:stroke-white/10"
         style={{ opacity: hovered ? 0.7 : 0 }}
       >
         {text}
@@ -99,8 +99,8 @@ export const TextHoverEffect = ({
         textAnchor="middle"
         dominantBaseline="middle"
         strokeWidth="0.3"
-        className="fill-transparent stroke-ayur-400 font-[helvetica] text-5xl font-bold 
-        dark:stroke-ayur-300"
+        className="fill-transparent stroke-[#8e9894] font-[helvetica] text-5xl font-bold 
+        dark:stroke-[#8e9894]"
         initial={{ strokeDashoffset: 1000, strokeDasharray: 1000 }}
         whileInView={{
           strokeDashoffset: 0,
@@ -137,7 +137,7 @@ export const FooterBackgroundGradient = () => {
       className="absolute inset-0 z-0"
       style={{
         background:
-          "radial-gradient(125% 125% at 50% 10%, rgba(11, 15, 12, 0.4) 50%, rgba(163, 177, 138, 0.2) 100%)",
+          "radial-gradient(125% 125% at 50% 10%, rgba(26, 77, 46, 0.4) 50%, rgba(163, 177, 138, 0.2) 100%)",
       }}
     />
   );

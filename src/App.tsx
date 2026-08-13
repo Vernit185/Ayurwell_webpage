@@ -4,8 +4,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { Toaster } from 'sonner';
 import ErrorBoundary from './components/common/ErrorBoundary';
 
-// Real Pages
-import MainChat from './components/chat/MainChat';
+// Removed local MainChat as chatbot is now fully external
 
 // Premium Pages & Layout
 import { Layout } from './Layout';
@@ -28,11 +27,9 @@ export default function App() {
               <Route path="/doctors" element={<Doctors />} />
               <Route path="/knowledge-hub" element={<KnowledgeHub />} />
               <Route path="/products" element={<Products />} />
-              <Route path="/chatbot" element={<MainChat />} />
             </Route>
 
-            {/* Embeddable Chatbot Route (No Sidebar/Layout) */}
-            <Route path="/embed/chat/:id" element={<MainChat />} />
+            {/* Embeddable Chatbot Route removed (using external) */}
 
             {/* Catch-all redirect */}
             <Route path="*" element={<Navigate to="/" replace />} />

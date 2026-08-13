@@ -46,7 +46,7 @@ export function Products() {
       else if (price === '₹500 - ₹1000') { min_price = 500; max_price = 1000; }
       else if (price === 'Over ₹1000') min_price = 1000;
 
-      const res = await fetch('http://localhost:8000/products/search', {
+      const res = await fetch('http://127.0.0.1:8000/products/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -105,7 +105,7 @@ export function Products() {
     fetchProducts('all');
     
     // Fetch dynamic brands saved in DB
-    fetch('http://localhost:8000/products/brands')
+    fetch('http://127.0.0.1:8000/products/brands')
       .then(res => res.json())
       .then(data => {
         if (data.status === 'Success' && data.brands) {
