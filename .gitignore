@@ -56,9 +56,9 @@ env.bak/
 venv.bak/
 
 # SQLite databases
-*.sqlite3
-*.db
-backend/ayurwell_products.db
+# *.sqlite3
+# *.db
+# backend/ayurwell_products.db
 
 # Ignored Local Data and Docs
 Data/
