@@ -8,22 +8,28 @@ os.makedirs(CHROMA_DB_PATH, exist_ok=True)
 
 chroma_client = chromadb.PersistentClient(path=CHROMA_DB_PATH)
 
-# Use lightweight fast sentence transformer
-sentence_transformer_ef = embedding_functions.SentenceTransformerEmbeddingFunction(model_name="all-MiniLM-L6-v2")
+sentence_transformer_ef = None
+disease_collection = None
+herb_collection = None
 
-# Get or create the collections
-disease_collection = chroma_client.get_or_create_collection(
-    name="diseases", 
-    embedding_function=sentence_transformer_ef
-)
-
-herb_collection = chroma_client.get_or_create_collection(
-    name="herbs", 
-    embedding_function=sentence_transformer_ef
-)
+def init_models():
+    global sentence_transformer_ef, disease_collection, herb_collection
+    if sentence_transformer_ef is None:
+        print("Lazy loading AI models...")
+        sentence_transformer_ef = embedding_functions.SentenceTransformerEmbeddingFunction(model_name="all-MiniLM-L6-v2")
+        disease_collection = chroma_client.get_or_create_collection(
+            name="diseases", 
+            embedding_function=sentence_transformer_ef
+        )
+        herb_collection = chroma_client.get_or_create_collection(
+            name="herbs", 
+            embedding_function=sentence_transformer_ef
+        )
+        print("Models loaded successfully.")
 
 def seed_semantic_knowledge():
     """Seeds ChromaDB with initial Disease and Herb knowledge vectors."""
+    init_models()
     # 1. Seed Diseases
     if disease_collection.count() == 0:
         diseases = [
@@ -56,6 +62,7 @@ def seed_semantic_knowledge():
 
 def search_disease(query: str, top_k: int = 1):
     """Semantically search for the most likely disease."""
+    init_models()
     results = disease_collection.query(
         query_texts=[query],
         n_results=top_k

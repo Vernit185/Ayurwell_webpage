@@ -6,12 +6,7 @@ class IntentClassifier:
     Deterministically categorizes the user's search intent using rules and pattern matching.
     """
     def __init__(self):
-        try:
-            self.nlp = spacy.load("en_core_web_sm")
-        except:
-            import en_core_web_sm
-            self.nlp = en_core_web_sm.load()
-            
+        self.nlp = None
         # Hardcoded knowledge lists for deterministic pattern matching
         self.known_brands = {"patanjali", "dabur", "himalaya", "zandu", "baidyanath", "kapiva"}
         self.known_herbs = {"ashwagandha", "tulsi", "yashtimadhu", "mulethi", "amla", "brahmi", "licorice"}
@@ -20,6 +15,13 @@ class IntentClassifier:
         self.goal_keywords = {"immunity", "booster", "sleep", "digestion", "weight loss", "energy"}
         
     def classify(self, query: str) -> str:
+        if self.nlp is None:
+            try:
+                self.nlp = spacy.load("en_core_web_sm")
+            except:
+                import en_core_web_sm
+                self.nlp = en_core_web_sm.load()
+                
         query_lower = query.lower()
         
         # 0. Show all products

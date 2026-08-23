@@ -8,14 +8,8 @@ class QueryRewriter:
     2. Maps colloquial phrases to canonical medical concepts
     """
     def __init__(self):
-        try:
-            self.nlp = spacy.load("en_core_web_sm")
-        except:
-            import en_core_web_sm
-            self.nlp = en_core_web_sm.load()
-            
-        self.matcher = PhraseMatcher(self.nlp.vocab, attr="LOWER")
-        
+        self.nlp = None
+        self.matcher = None
         # Vernacular / Spelling corrections (Raw string replacements before spaCy)
         self.spell_corrections = {
             "mulethi": "yashtimadhu",
@@ -33,11 +27,20 @@ class QueryRewriter:
             "Persistent Cough": ["dry cough", "wet cough", "phlegm", "hacking", "keep coughing"]
         }
         
-        for canonical, phrases in self.canonical_map.items():
-            patterns = [self.nlp.make_doc(text) for text in phrases]
-            self.matcher.add(canonical, patterns)
-            
+    def _init_nlp(self):
+        if self.nlp is None:
+            try:
+                self.nlp = spacy.load("en_core_web_sm")
+            except:
+                import en_core_web_sm
+                self.nlp = en_core_web_sm.load()
+            self.matcher = PhraseMatcher(self.nlp.vocab, attr="LOWER")
+            for canonical, phrases in self.canonical_map.items():
+                patterns = [self.nlp.make_doc(text) for text in phrases]
+                self.matcher.add(canonical, patterns)
+
     def rewrite(self, query: str) -> str:
+        self._init_nlp()
         # 1. Spelling and simple term replacement
         words = query.lower().split()
         corrected_words = [self.spell_corrections.get(w, w) for w in words]
