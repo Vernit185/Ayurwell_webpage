@@ -1,5 +1,4 @@
 import os
-os.environ["HF_HUB_OFFLINE"] = "1"
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 print("Importing FastAPI...")

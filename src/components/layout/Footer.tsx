@@ -88,7 +88,7 @@ export function Footer() {
       </div>
 
       {/* HUGE Outline Text at Bottom */}
-      <div className="relative w-full h-[20rem] md:h-[30rem] flex justify-center items-center overflow-hidden -mb-16 mt-8 z-10">
+      <div className="relative w-full h-[15rem] md:h-[25rem] flex justify-center items-center overflow-hidden -mt-10 -mb-24 md:-mt-20 md:-mb-32 z-10">
         <TextHoverEffect text="AYURWELL" className="z-50" />
       </div>
     </footer>
