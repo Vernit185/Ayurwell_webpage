@@ -1,7 +1,7 @@
 import React from 'react';
 import { Mail, Phone, MapPin, Globe, Link as LinkIcon, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
+import { TextHoverEffect } from '@/components/ui/hover-footer';
 export function Footer() {
   return (
     <footer className="bg-primary text-white py-16 px-6 md:px-12 relative overflow-hidden mt-auto">
@@ -88,13 +88,8 @@ export function Footer() {
       </div>
 
       {/* HUGE Outline Text at Bottom */}
-      <div className="relative w-full flex justify-center items-end overflow-hidden mt-8 select-none pointer-events-none opacity-20">
-        <h1
-          className="text-[12vw] font-black tracking-widest leading-none text-transparent"
-          style={{ WebkitTextStroke: '2px #FFFFFF' }}
-        >
-          AYURWELL
-        </h1>
+      <div className="relative w-full h-[20rem] md:h-[30rem] flex justify-center items-center overflow-hidden -mb-16 mt-8 z-10">
+        <TextHoverEffect text="AYURWELL" className="z-50" />
       </div>
     </footer>
   );
