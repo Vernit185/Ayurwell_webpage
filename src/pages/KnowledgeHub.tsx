@@ -112,7 +112,8 @@ export function KnowledgeHub() {
 
       setIsSearching(true);
       try {
-        const response = await fetch(`http://localhost:8000/api/articles/search?q=${encodeURIComponent(searchQuery)}`);
+        const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+        const response = await fetch(`${API_BASE}/api/articles/search?q=${encodeURIComponent(searchQuery)}`);
         if (response.ok) {
           const data = await response.json();
           setDynamicArticles(data);
